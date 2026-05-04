@@ -15,9 +15,7 @@ A simple, discord looking bio page.
 4. Create a Worker and add your secrets:
     ```bash
     wrangler secret put LANYARD_API_URL
-    wrangler secret put DISCORD_ID
     wrangler secret put LASTFM_API_KEY
-    wrangler secret put LASTFM_USERNAME
     ```
 5. Deploy with `wrangler deploy` and update the API URLs in `index.html` and `lastfm.js` with your Worker URL. Also update the CORS allowlist in `server.js` with your Cloudflare Pages URL and custom domain
 6. Fill in your details in `index.html` — Discord ID, pronouns, about text, and social links
