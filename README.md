@@ -19,7 +19,7 @@ A simple, discord looking bio page.
     wrangler secret put LASTFM_API_KEY
     wrangler secret put LASTFM_USERNAME
     ```
-5. Deploy with `wrangler deploy` and update the API URLs in `index.html` and `lastfm.js` with your Worker URL
+5. Deploy with `wrangler deploy` and update the API URLs in `index.html` and `lastfm.js` with your Worker URL. Also update the CORS allowlist in `server.js` with your Cloudflare Pages URL and custom domain
 6. Fill in your details in `index.html` — Discord ID, pronouns, about text, and social links
 7. Drop your assets into `img/` — see the table below
 8. Link the repo to [Cloudflare Pages](https://pages.cloudflare.com)
@@ -31,6 +31,5 @@ A simple, discord looking bio page.
 | `img/banner.png` | 747 × 263 |
 | `img/404.png` | 250 × 250 |
 | `img/socials/*.png` | 250 × 250 |
-
 
 - Vibe coded with Claude
