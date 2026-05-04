@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="img/fav/favicon-96x96.png" sizes="96x96" />
+  <link rel="icon" type="image/svg+xml" href="img/fav/favicon.svg" />
+  <link rel="shortcut icon" href="img/fav/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="img/fav/apple-touch-icon.png" />
+  <link rel="manifest" href="img/fav/site.webmanifest" />
+  <title>YOU</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@400;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <!-- Starfield — drawn by stars.js -->
+  <canvas id="stars"></canvas>
+
+  <!-- ── Card -->
+  <div class="card">
+
+    <!-- Banner — drop your 747×263 image as img/banner.png to use it -->
+    <div class="banner-bg">
+      <img id="banner-img" src="img/banner.png" alt="banner" onerror="this.style.display='none'" />
+    </div>
+
+    <!-- Avatar (src + status filled by Lanyard JS below) -->
+    <div class="avatar-outer">
+      <div class="avatar-ring">
+        <img id="avatar-img" src="" alt="avatar" />
+      </div>
+      <div class="status-dot" id="status-dot" data-status="offline"></div>
+    </div>
+
+    <div class="card-body">
+
+      <!-- Identity -->
+      <div class="name" id="display-name">Temp</div>
+      <div class="handle-row">
+        <span id="discord-handle">@handle</span>
+        <span class="sep">|</span>
+        <span>he/him</span>
+      </div>
+
+      <div class="tagline">UrEmail@domain.com</div>
+
+      <div class="divider"></div>
+
+      <!-- About -->
+      <div class="section-label">About Me</div>
+      <div class="about-text">
+        hey, i'm <span class="hl">Temp</span>. I enjoy
+        <span class="hl">Temp</span>,
+        <span class="hl">Temp</span>
+        and <span class="hl">Temp</span>.
+      </div>
+
+      <!-- Discord activity (Lanyard) — hidden until populated -->
+      <div class="activity-wrap" id="activity-wrap">
+        <div class="section-label">Currently</div>
+        <div class="activity-card">
+          <img class="activity-icon" id="activity-icon" src="" alt="" />
+          <div class="activity-info">
+            <div class="activity-name" id="activity-name"></div>
+            <div class="activity-detail" id="activity-detail"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Last.fm now playing -->
+      <div class="now-playing-wrap" id="now-playing-wrap">
+        <div class="section-label">Recently Listened To</div>
+        <div class="now-playing-card">
+          <img class="album-art" id="album-art" src="img/404.png" alt="album art" onerror="this.src='img/404.png'" />
+          <div class="track-info">
+            <div class="track-name"  id="track-name">—</div>
+            <div class="track-artist" id="track-artist"></div>
+            <div class="track-album"  id="track-album"></div>
+          </div>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-bar" id="progress-bar"></div>
+        </div>
+      </div>
+
+      <!-- Social buttons — icons live in img/icons/ -->
+      <div class="socials" id="socials">
+        <a href="https://youtube.com/@U" class="social-btn" title="YouTube" target="_blank" rel="noopener">
+          <img src="img/icons/yt.png" alt="YouTube" />
+        </a>
+        <a href="https://instagram.com/U" class="social-btn" title="Instagram" target="_blank" rel="noopener">
+          <img src="img/icons/insta.png" alt="Instagram" />
+        </a>
+        <a href="https://twitter.com/U" class="social-btn" title="Twitter" target="_blank" rel="noopener">
+          <img src="img/icons/twitter.png" alt="Twitter" />
+        </a>
+        <a href="https://t.me/U" class="social-btn" title="Telegram" target="_blank" rel="noopener">
+          <img src="img/icons/tele.png" alt="Telegram" />
+        </a>
+        <a href="https://last.fm/user/U" class="social-btn" title="Last.fm" target="_blank" rel="noopener">
+          <img src="img/icons/fm.png" alt="Last.fm" />
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+
+  <script src="stars.js"></script>
+
+  <script>
+    const DISCORD_ID = 'YOUR_DISCORD_ID';
+
+    async function fetchLanyard() {
+      try {
+        const res  = await fetch('https://name.yourname.workers.dev/api/presence');
+        const json = await res.json();
+        if (!json.success) return;
+
+        const data = json.data;
+
+        // Avatar
+        const avatarHash = data.discord_user.avatar;
+        const userId     = data.discord_user.id;
+        document.getElementById('avatar-img').src =
+          `https://cdn.discordapp.com/avatars/${userId}/${avatarHash}.${avatarHash.startsWith('a_') ? 'gif' : 'webp'}?size=128`;
+
+        // Display name / handle
+        document.getElementById('display-name').textContent =
+          data.discord_user.global_name || data.discord_user.username;
+        document.getElementById('discord-handle').textContent =
+          '@' + data.discord_user.username;
+
+        // Status dot
+        document.getElementById('status-dot')
+          .setAttribute('data-status', data.discord_status);
+
+        // Activity (first Playing activity)
+        const activity = (data.activities || []).find(a => a.type === 0);
+        if (activity) {
+          document.getElementById('activity-wrap').style.display = 'block';
+          document.getElementById('activity-name').textContent   = activity.name;
+          document.getElementById('activity-detail').textContent = activity.details || activity.state || '';
+
+          if (activity.assets?.large_image) {
+            const appId = activity.application_id;
+            const img   = activity.assets.large_image;
+            document.getElementById('activity-icon').src =
+              `https://cdn.discordapp.com/app-assets/${appId}/${img}.webp?size=64`;
+          }
+        }
+
+      } catch (err) {
+        console.warn('Lanyard fetch failed:', err);
+      }
+    }
+
+    fetchLanyard();
+    setInterval(fetchLanyard, 30_000);
+  </script>
+
+  <script src="lastfm.js"></script>
+
+</body>
+</html>

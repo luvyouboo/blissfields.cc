@@ -1,0 +1,12 @@
+name = "bio"
+main = "server.js"
+compatibility_date = "2025-09-15"
+
+# ─── Secrets — run these once before deploying ────────────────────────────────
+#   wrangler secret put LASTFM_API_KEY
+#   wrangler secret put LANYARD_API_URL
+
+# ─── Non-secret env vars ──────────────────────────────────────────────────────
+[vars]
+LASTFM_USERNAME = "UR LASTFM USERNAME"
+DISCORD_ID      = "UR DISCORD_ID"

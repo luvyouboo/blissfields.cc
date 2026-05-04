@@ -1,0 +1,331 @@
+/* Reset */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* Tokens */
+:root {
+  --bg:           #080b10;
+  --card-bg:      #10161f;
+  --card-border:  #1e2a3a;
+  --accent:       #4a9eff;
+  --text:         #d4dde8;
+  --muted:        #5a6a7a;
+  --label:        #3a4a5a;
+
+  /* status dot colours */
+  --status-online:    #23a559;
+  --status-idle:      #f0b232;
+  --status-dnd:       #f23f43;
+  --status-offline:   #80848e;
+}
+
+/* Page */
+body {
+  background: var(--bg);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'DM Mono', monospace;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Starfield canvas */
+canvas#stars {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/*Card*/
+.card {
+  position: relative;
+  z-index: 10;
+  width: 380px;
+  border-radius: 16px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  overflow: hidden;
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.7),
+    0 0 0 1px rgba(255, 255, 255, 0.03);
+  animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)   scale(1);    }
+}
+
+/* Banner */
+.banner-bg {
+  width: 100%;
+  height: 125px;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: #0e1e30;
+}
+
+.banner-bg img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.banner-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at 70% 40%,
+    rgba(74, 158, 255, 0.12) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+/* Avatar */
+.avatar-outer {
+  position: relative;
+  margin-top: -34px;
+  margin-left: 18px;
+  width: 68px;
+  height: 68px;
+  flex-shrink: 0;
+}
+
+.avatar-ring {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  border: 3px solid var(--card-bg);
+  overflow: hidden;
+  background: #1e2a38;
+}
+
+.avatar-ring img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.status-dot {
+  position: absolute;
+  bottom: 3px;
+  right: 3px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2.5px solid var(--card-bg);
+  background: var(--status-offline);
+  transition: background 0.3s;
+}
+.status-dot[data-status="online"]  { background: var(--status-online);  }
+.status-dot[data-status="idle"]    { background: var(--status-idle);    }
+.status-dot[data-status="dnd"]     { background: var(--status-dnd);     }
+.status-dot[data-status="offline"] { background: var(--status-offline); }
+
+/* Card body */
+.card-body {
+  padding: 12px 22px 26px;
+}
+
+.name {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  color: #edf2f7;
+  letter-spacing: -0.3px;
+}
+
+.handle-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 3px;
+  font-size: 11.5px;
+  color: var(--muted);
+}
+.handle-row .sep { opacity: 0.35; }
+
+.tagline {
+  margin-top: 5px;
+  font-size: 9.5px;
+  color: var(--accent);
+  font-style: italic;
+  letter-spacing: 0.3px;
+}
+
+.divider {
+  height: 1px;
+  background: var(--card-border);
+  margin: 16px 0;
+}
+
+/* Section label */
+.section-label {
+  font-size: 9px;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: var(--label);
+  margin-bottom: 7px;
+  font-weight: 500;
+}
+
+/* About */
+.about-text {
+  font-size: 12px;
+  line-height: 1.75;
+  color: var(--text);
+}
+.about-text .hl {
+  color: var(--accent);
+}
+
+/* Activity (Lanyard) */
+.activity-wrap {
+  display: none;
+  margin-top: 14px;
+}
+
+.activity-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: 9px 11px;
+}
+
+.activity-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 6px;
+  object-fit: cover;
+  background: var(--card-border);
+  flex-shrink: 0;
+}
+
+.activity-info { flex: 1; min-width: 0; }
+.activity-name {
+  font-family: 'Syne', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: #edf2f7;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.activity-detail {
+  font-size: 10px;
+  color: var(--muted);
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Now Playing (Last.fm) */
+.now-playing-wrap {
+  margin-top: 14px;
+}
+
+.now-playing-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: 9px 11px;
+}
+
+.album-art {
+  width: 48px;
+  height: 48px;
+  border-radius: 6px;
+  background: #1e2a38;
+  flex-shrink: 0;
+  object-fit: cover;
+}
+
+.track-info { flex: 1; min-width: 0; }
+.track-name {
+  font-family: 'Syne', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: #edf2f7;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.track-artist, .track-album {
+  font-size: 10px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.progress-wrap {
+  margin-top: 8px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent), #7cc4ff);
+  border-radius: 2px;
+  transition: width 1s linear;
+}
+
+/* Social buttons */
+.socials {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--card-border);
+}
+
+.social-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--card-border);
+  transition: transform 0.15s, background 0.2s;
+  padding: 7px;
+}
+
+.social-btn img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.social-btn:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.social-btn:hover img {
+  opacity: 1;
+}
