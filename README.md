@@ -28,7 +28,7 @@ A simple, discord looking bio page.
 ## Assets
 | File | Size |
 |------|------|
-| `img/banner.png` | 747 × 263 |
+| `img/banner.png` | 800 × 300 |
 | `img/404.png` | 250 × 250 |
 | `img/socials/*.png` | 250 × 250 |
 
